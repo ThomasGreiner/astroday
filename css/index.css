@@ -4,8 +4,13 @@ body {
 }
 
 svg {
-  zoom: 200;
+  zoom: 400;
   transform: rotate(90deg);
+}
+
+.labels line {
+  stroke: #888;
+  stroke-width: 0.005;
 }
 
 .day {
@@ -17,8 +22,8 @@ svg {
 }
 
 .now {
-  stroke: red;
-  stroke-width: 0.01;
+  stroke: #C33;
+  stroke-width: 0.005;
 }
 
 .sunrise {
