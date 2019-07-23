@@ -1,8 +1,8 @@
 "use strict";
 
-let date = new Date();
-let hours = date.getHours();
-let minutes = date.getMinutes();
+let dateNow = new Date();
+let hours = dateNow.getHours();
+let minutes = dateNow.getMinutes();
 console.log("time", hours, minutes);
 let dateStart = new Date();
 dateStart.setHours(0, 0, 0);
@@ -20,12 +20,17 @@ function toRad(date) {
 
 function toCoord(date) {
   let rad = toRad(date);
-  // Add 90° to start at 50,0 instead of 100,50
-  // TODO: flip horizontally
   return {
-    x: 50 + 50 * Math.cos(rad + 90),
-    y: 50 + 50 * Math.sin(rad + 90)
+    value: date,
+    x: 1 * Math.cos(rad),
+    y: 1 * Math.sin(rad )
   };
+}
+
+function setPath(path, from, to) {
+  let share = (to.value - from.value) / totalTime;
+  let isLarge = (share > 0.5) ? 1 : 0;
+  path.setAttribute("d", `M${from.x} ${from.y} A 1 1 0 ${isLarge} 1 ${to.x} ${to.y} L 0 0`);
 }
 
 navigator.geolocation.getCurrentPosition((position) => {
@@ -43,7 +48,10 @@ navigator.geolocation.getCurrentPosition((position) => {
   let daytimeEnd = toCoord(sunset);
   console.log(daytimeStart, daytimeEnd);
   
-  // TODO: set radius for arc or otherwise it will always draw the shortest possible arc
-  $(".day").setAttribute("d", `M50 50 L ${daytimeStart.x} ${daytimeStart.y} A 50 50 0 0 0 ${daytimeEnd.x} ${daytimeEnd.y}`);
-  $(".night").setAttribute("d", `M50 50 L ${daytimeEnd.x} ${daytimeEnd.y} A 50 50 0 0 0 ${daytimeStart.x} ${daytimeStart.y}`);
+  setPath($(".day"), daytimeStart, daytimeEnd);
+  setPath($(".night"), daytimeEnd, daytimeStart);
+  
+  let now = toCoord(dateNow);
+  $(".now").setAttribute("x2", now.x);
+  $(".now").setAttribute("y2", now.y);
 });

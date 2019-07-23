@@ -4,7 +4,8 @@ body {
 }
 
 svg {
-  zoom: 5;
+  zoom: 200;
+  transform: rotate(90deg);
 }
 
 .day {
@@ -13,6 +14,11 @@ svg {
 
 .night {
   fill: #111;
+}
+
+.now {
+  stroke: red;
+  stroke-width: 0.01;
 }
 
 .sunrise {
