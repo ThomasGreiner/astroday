@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+svg {
+  zoom: 5;
+}
+
+.day {
+  fill: #EEE;
+}
+
+.night {
+  fill: #111;
+}
+
+.sunrise {
+  fill: #888;
+}
+
+.sunset {
+  fill: #333;
+}
