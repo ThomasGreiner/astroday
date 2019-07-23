@@ -1,6 +1,16 @@
 body {
   margin: 0;
+  padding: 100px;
+  text-align: center;
   overflow: hidden;
+}
+
+body[data-phase="day"] {
+  background-color: #EEE;
+}
+
+body[data-phase="night"] {
+  background-color: #111;
 }
 
 svg {
@@ -8,28 +18,36 @@ svg {
   transform: rotate(90deg);
 }
 
-.labels line {
+svg .labels line {
   stroke: #888;
   stroke-width: 0.005;
 }
 
-.day {
+svg .day {
   fill: #EEE;
 }
 
-.night {
+svg .night {
   fill: #111;
 }
 
-.now {
+svg .now {
   stroke: #C33;
   stroke-width: 0.005;
 }
 
-.sunrise {
+body[data-phase="day"] svg .now {
+  stroke: #DDD;
+}
+
+body[data-phase="night"] svg .now {
+  stroke: #444;
+}
+
+svg .sunrise {
   fill: #888;
 }
 
-.sunset {
+svg .sunset {
   fill: #333;
 }

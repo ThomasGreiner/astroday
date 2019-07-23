@@ -45,7 +45,7 @@ function addHourIndicator(hour) {
   let coord1 = toCoord(hour / 24, 0.9);
   line.setAttribute("x1", coord1.x);
   line.setAttribute("y1", coord1.y);
-  let coord2 = toCoord(hour / 24);
+  let coord2 = toCoord(hour / 24, 0.95);
   line.setAttribute("x2", coord2.x);
   line.setAttribute("y2", coord2.y);
   $("svg .labels").appendChild(line);
@@ -73,7 +73,13 @@ navigator.geolocation.getCurrentPosition((position) => {
   setPath($(".day"), daytimeStart, daytimeEnd);
   setPath($(".night"), daytimeEnd, daytimeStart);
   
-  let now = toCoord(dateNow);
+  if (dateNow > daytimeStart && dateNow < daytimeEnd) {
+    document.body.dataset.phase = "day";
+  } else {
+    document.body.dataset.phase = "night";
+  }
+  
+  let now = toCoord(toPercent(dateNow), 0.85);
   $(".now").setAttribute("x2", now.x);
   $(".now").setAttribute("y2", now.y);
 });
