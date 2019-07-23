@@ -30,7 +30,12 @@ function toCoord(value, radius = 1) {
 }
 
 function setPath(path, from, to) {
-  let share = to.value - from.value;
+  let share = 0;
+  if (to.value > from.value) {
+    share = to.value - from.value;
+  } else {
+    share += to.value + (1 - from.value);
+  }
   let isLarge = (share > 0.5) ? 1 : 0;
   path.setAttribute("d", `M${from.x} ${from.y} A 1 1 0 ${isLarge} 1 ${to.x} ${to.y} L 0 0`);
 }
