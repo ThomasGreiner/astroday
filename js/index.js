@@ -1,5 +1,6 @@
 "use strict";
 
+import * as seasons from "../lib/astrolib/seasons.js";
 import * as sun from "../lib/astrolib/sun.js";
 
 let dateNow = new Date();
@@ -63,7 +64,7 @@ navigator.geolocation.getCurrentPosition((position) => {
   let lon = coords.longitude;
   console.log("coords", lat, lon);
   
-  // https://github.com/kevinboone/solunar_cmdline/blob/master/suntimes.c
+  // Sun
   let now = toCoord(toPercent(dateNow), 0.85);
   let dawn = toCoord(toPercent(sun.getCivilDawn(lat, lon)));
   let sunrise = toCoord(toPercent(sun.getSunrise(lat, lon)));
@@ -85,6 +86,18 @@ navigator.geolocation.getCurrentPosition((position) => {
     document.body.dataset.phase = "night";
   }
   
+  // Seasons
+  let yearNow = dateNow.getFullYear();
+  let spring = seasons.getVernalEquinox(yearNow);
+  let summer = seasons.getSummerSolstice(yearNow, false);
+  let autumn = seasons.getAutumnalEquinox(yearNow);
+  let winter = seasons.getWinterSolstice(yearNow, false);
+  console.log("spring", spring);
+  console.log("summer", summer);
+  console.log("autumn", autumn);
+  console.log("winter", winter);
+  
+  // Now
   $(".now").setAttribute("x2", now.x);
   $(".now").setAttribute("y2", now.y);
 });
