@@ -64,6 +64,7 @@ navigator.geolocation.getCurrentPosition((position) => {
   console.log("coords", lat, lon);
   
   // https://github.com/kevinboone/solunar_cmdline/blob/master/suntimes.c
+  let now = toCoord(toPercent(dateNow), 0.85);
   let dawn = toCoord(toPercent(astrolib.getCivilDawn(lat, lon)));
   let sunrise = toCoord(toPercent(astrolib.getSunrise(lat, lon)));
   let sunset = toCoord(toPercent(astrolib.getSunset(lat, lon)));
@@ -78,13 +79,12 @@ navigator.geolocation.getCurrentPosition((position) => {
   setPath($(".sunset"), sunset, dusk);
   setPath($(".night"), dusk, dawn);
   
-  if (dateNow > sunrise.value && dateNow < sunset.value) {
+  if (now.value > sunrise.value && now.value < sunset.value) {
     document.body.dataset.phase = "day";
   } else {
     document.body.dataset.phase = "night";
   }
   
-  let now = toCoord(toPercent(dateNow), 0.85);
   $(".now").setAttribute("x2", now.x);
   $(".now").setAttribute("y2", now.y);
 });
