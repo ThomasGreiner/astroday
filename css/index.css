@@ -5,20 +5,24 @@ body {
   overflow: hidden;
 }
 
-body[data-phase="dawn"] {
-  background-color: #AAA;
-}
-
 body[data-phase="day"] {
   background-color: #EEE;
 }
 
-body[data-phase="dusk"] {
-  background-color: #333;
-}
-
 body[data-phase="night"] {
   background-color: #111;
+}
+
+body[data-phase="twilight-astronomical"] {
+  background-color: #444;
+}
+
+body[data-phase="twilight-civil"] {
+  background-color: #AAA;
+}
+
+body[data-phase="twilight-nautical"] {
+  background-color: #777;
 }
 
 svg {
@@ -32,15 +36,15 @@ svg .labels line {
 }
 
 svg .now {
+  /* TODO: implement twilight colors instead */
+  stroke: #F00;
   stroke-width: 0.005;
 }
 
-body[data-phase="dawn"] svg .now,
 body[data-phase="day"] svg .now {
   stroke: #BBB;
 }
 
-body[data-phase="dusk"] svg .now,
 body[data-phase="night"] svg .now {
   stroke: #444;
 }

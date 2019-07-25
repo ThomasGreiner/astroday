@@ -70,31 +70,73 @@ function render(lat, lon) {
   let duskC = toCoord(toPercent(sun.getCivilDusk(lat, lon)));
   let duskN = toCoord(toPercent(sun.getNauticalDusk(lat, lon)));
   let duskA = toCoord(toPercent(sun.getAstronomicalDusk(lat, lon)));
+  console.log("now", now.value);
   console.log("dawn", dawnA.value, dawnN.value, dawnC.value);
   console.log("sunrise", sunrise.value);
   console.log("sunset", sunset.value);
   console.log("dusk", duskC.value, duskN.value, duskA.value);
   
-  setPath($(".dawn.astronomical"), dawnA, dawnN);
+  // Determine current phase independent of their order
+  let events = [
+    now,
+    dawnA, dawnN, dawnC,
+    sunrise, sunset,
+    duskC, duskN, duskA
+  ];
+  events = events
+    .filter((event) => !!event.value)
+    .sort((a, b) => a.value % 1 - b.value % 1);
+  
+  let eventPrev;
+  let idxNow = events.indexOf(now);
+  if (idxNow === 0) {
+    eventPrev = events[events.length - 1];
+  } else {
+    eventPrev = events[idxNow - 1];
+  }
+  
+  let phaseNow;
+  switch (eventPrev) {
+    case dawnA:
+    case duskN:
+      // Skip if there's no astronomical twilight
+      phaseNow = (duskA.value) ? "twilight-astronomical" : "night";
+      break;
+    case dawnN:
+    case duskC:
+      phaseNow = "twilight-nautical";
+      break;
+    case dawnC:
+    case sunset:
+      phaseNow = "twilight-civil";
+      break;
+    case sunrise:
+      phaseNow = "day";
+      break;
+    case duskA:
+      phaseNow = "night";
+  }
+  document.body.dataset.phase = phaseNow;
+  
+  // Phases
+  if (dawnA.value) {
+    setPath($(".dawn.astronomical"), dawnA, dawnN);
+  } else {
+    // Skip if there's no astronomical twilight
+    dawnA = dawnN;
+  }
   setPath($(".dawn.nautical"), dawnN, dawnC);
   setPath($(".dawn.civil"), dawnC, sunrise);
   setPath($(".day"), sunrise, sunset);
   setPath($(".dusk.civil"), sunset, duskC);
   setPath($(".dusk.nautical"), duskC, duskN);
-  setPath($(".dusk.astronomical"), duskN, duskA);
-  setPath($(".night"), duskA, dawnA);
-  
-  let phaseNow;
-  if (now.value > duskC.value) {
-    phaseNow = "night";
-  } else if (now.value > sunset.value) {
-    phaseNow = "dusk";
-  } else if (now.value > sunrise.value) {
-    phaseNow = "day";
+  if (duskA.value) {
+    setPath($(".dusk.astronomical"), duskN, duskA);
   } else {
-    phaseNow = "dawn";
+    // Skip if there's no astronomical twilight
+    duskA = duskN;
   }
-  document.body.dataset.phase = phaseNow;
+  setPath($(".night"), duskA, dawnA);
   
   // Seasons
   let yearNow = dateNow.getFullYear();
