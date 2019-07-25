@@ -32,12 +32,11 @@ svg .night {
 }
 
 svg .now {
-  stroke: #C33;
   stroke-width: 0.005;
 }
 
 body[data-phase="day"] svg .now {
-  stroke: #DDD;
+  stroke: #BBB;
 }
 
 body[data-phase="night"] svg .now {
@@ -45,7 +44,7 @@ body[data-phase="night"] svg .now {
 }
 
 svg .sunrise {
-  fill: #888;
+  fill: #AAA;
 }
 
 svg .sunset {
