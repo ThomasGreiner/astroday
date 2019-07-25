@@ -1,6 +1,6 @@
 "use strict";
 
-import * as astrolib from "../lib/astrolib.js";
+import * as sun from "../lib/astrolib/sun.js";
 
 let dateNow = new Date();
 let hours = dateNow.getHours();
@@ -65,10 +65,10 @@ navigator.geolocation.getCurrentPosition((position) => {
   
   // https://github.com/kevinboone/solunar_cmdline/blob/master/suntimes.c
   let now = toCoord(toPercent(dateNow), 0.85);
-  let dawn = toCoord(toPercent(astrolib.getCivilDawn(lat, lon)));
-  let sunrise = toCoord(toPercent(astrolib.getSunrise(lat, lon)));
-  let sunset = toCoord(toPercent(astrolib.getSunset(lat, lon)));
-  let dusk = toCoord(toPercent(astrolib.getCivilDusk(lat, lon)));
+  let dawn = toCoord(toPercent(sun.getCivilDawn(lat, lon)));
+  let sunrise = toCoord(toPercent(sun.getSunrise(lat, lon)));
+  let sunset = toCoord(toPercent(sun.getSunset(lat, lon)));
+  let dusk = toCoord(toPercent(sun.getCivilDusk(lat, lon)));
   console.log("dawn", dawn.value);
   console.log("sunrise", sunrise.value);
   console.log("dusk", dusk.value);
