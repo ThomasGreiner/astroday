@@ -31,14 +31,6 @@ svg .labels line {
   stroke-width: 0.005;
 }
 
-svg .day {
-  fill: #EEE;
-}
-
-svg .night {
-  fill: #111;
-}
-
 svg .now {
   stroke-width: 0.005;
 }
@@ -53,10 +45,22 @@ body[data-phase="night"] svg .now {
   stroke: #444;
 }
 
-svg .sunrise {
+svg .day {
+  fill: #EEE;
+}
+
+svg .night {
+  fill: #111;
+}
+
+svg .astronomical {
+  fill: #444;
+}
+
+svg .civil {
   fill: #AAA;
 }
 
-svg .sunset {
-  fill: #333;
+svg .nautical {
+  fill: #777;
 }

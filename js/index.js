@@ -75,10 +75,14 @@ function render(lat, lon) {
   console.log("sunset", sunset.value);
   console.log("dusk", duskC.value, duskN.value, duskA.value);
   
-  setPath($(".sunrise"), dawnC, sunrise);
+  setPath($(".dawn.astronomical"), dawnA, dawnN);
+  setPath($(".dawn.nautical"), dawnN, dawnC);
+  setPath($(".dawn.civil"), dawnC, sunrise);
   setPath($(".day"), sunrise, sunset);
-  setPath($(".sunset"), sunset, duskC);
-  setPath($(".night"), duskC, dawnC);
+  setPath($(".dusk.civil"), sunset, duskC);
+  setPath($(".dusk.nautical"), duskC, duskN);
+  setPath($(".dusk.astronomical"), duskN, duskA);
+  setPath($(".night"), duskA, dawnA);
   
   let phaseNow;
   if (now.value > duskC.value) {
