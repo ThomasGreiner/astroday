@@ -3,18 +3,17 @@
 <head>
   <title></title>
   <link rel="stylesheet" href="css/index.css">
-  <script src="node_modules/sunrise-sunset-js/dist/sunrise-sunset.js"></script>
-  <script src="js/index.js" defer></script>
+  <script type="module" src="js/index.js" defer></script>
 </head>
 <body>
 
 <svg width="1" height="1" viewBox="-1 -1 2 2">
+  <path class="sunrise"/>
   <path class="day"/>
   <!-- https://www.timeanddate.com/astronomy/astronomical-twilight.html -->
   <!-- https://www.timeanddate.com/sun/germany/cologne -->
-  <!-- <path class="sunset"/> -->
+  <path class="sunset"/>
   <path class="night"/>
-  <!-- <path class="sunrise"/> -->
   <line class="now" x1="0" y1="0"/>
   <g class="labels"></g>
 </svg>
