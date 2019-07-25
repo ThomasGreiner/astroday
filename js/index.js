@@ -1,6 +1,6 @@
 "use strict";
 
-import * as SunriseSunsetJS from "../lib/sunrise-sunset.js";
+import * as astrolib from "../lib/astrolib.js";
 
 let dateNow = new Date();
 let hours = dateNow.getHours();
@@ -64,27 +64,21 @@ navigator.geolocation.getCurrentPosition((position) => {
   console.log("coords", lat, lon);
   
   // https://github.com/kevinboone/solunar_cmdline/blob/master/suntimes.c
-  let dawn = SunriseSunsetJS.getCivilDawn(lat, lon);
-  let sunrise = SunriseSunsetJS.getSunrise(lat, lon);
-  let sunset = SunriseSunsetJS.getSunset(lat, lon);
-  let dusk = SunriseSunsetJS.getCivilDusk(lat, lon);
-  console.log("dawn", dawn);
-  console.log("sunrise", sunrise);
-  console.log("dusk", dusk);
-  console.log("sunset", sunset);
+  let dawn = toCoord(toPercent(astrolib.getCivilDawn(lat, lon)));
+  let sunrise = toCoord(toPercent(astrolib.getSunrise(lat, lon)));
+  let sunset = toCoord(toPercent(astrolib.getSunset(lat, lon)));
+  let dusk = toCoord(toPercent(astrolib.getCivilDusk(lat, lon)));
+  console.log("dawn", dawn.value);
+  console.log("sunrise", sunrise.value);
+  console.log("dusk", dusk.value);
+  console.log("sunset", sunset.value);
   
-  let dawnStart = toCoord(toPercent(dawn));
-  let daytimeStart = toCoord(toPercent(sunrise));
-  let duskStart = toCoord(toPercent(dusk));
-  let daytimeEnd = toCoord(toPercent(sunset));
-  console.log(dawnStart, daytimeStart, duskStart, daytimeEnd);
+  setPath($(".sunrise"), dawn, sunrise);
+  setPath($(".day"), sunrise, sunset);
+  setPath($(".sunset"), sunset, dusk);
+  setPath($(".night"), dusk, dawn);
   
-  setPath($(".sunrise"), dawnStart, daytimeStart);
-  setPath($(".day"), daytimeStart, duskStart);
-  setPath($(".sunset"), daytimeEnd, duskStart);
-  setPath($(".night"), duskStart, dawnStart);
-  
-  if (dateNow > daytimeStart && dateNow < daytimeEnd) {
+  if (dateNow > sunrise.value && dateNow < sunset.value) {
     document.body.dataset.phase = "day";
   } else {
     document.body.dataset.phase = "night";
