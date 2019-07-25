@@ -5,8 +5,16 @@ body {
   overflow: hidden;
 }
 
+body[data-phase="dawn"] {
+  background-color: #AAA;
+}
+
 body[data-phase="day"] {
   background-color: #EEE;
+}
+
+body[data-phase="dusk"] {
+  background-color: #333;
 }
 
 body[data-phase="night"] {
@@ -35,10 +43,12 @@ svg .now {
   stroke-width: 0.005;
 }
 
+body[data-phase="dawn"] svg .now,
 body[data-phase="day"] svg .now {
   stroke: #BBB;
 }
 
+body[data-phase="dusk"] svg .now,
 body[data-phase="night"] svg .now {
   stroke: #444;
 }

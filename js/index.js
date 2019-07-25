@@ -3,21 +3,7 @@
 import * as seasons from "../lib/astrolib/seasons.js";
 import * as sun from "../lib/astrolib/sun.js";
 
-let dateNow = new Date();
-let hours = dateNow.getHours();
-let minutes = dateNow.getMinutes();
-console.log("time", hours, minutes);
-let dateStart = new Date();
-dateStart.setHours(0, 0, 0);
-let dateEnd = new Date();
-dateEnd.setHours(23, 59, 59);
-let totalTime = dateEnd - dateStart;
-
 const $ = (selector) => document.querySelector(selector);
-
-function toPercent(date) {
-  return (date - dateStart) / totalTime;
-}
 
 function toRad(value) {
   return Math.PI * 2 * value;
@@ -58,33 +44,53 @@ for (let i = 0; i < 24; i++) {
   addHourIndicator(i);
 }
 
-navigator.geolocation.getCurrentPosition((position) => {
-  let {coords} = position;
-  let lat = coords.latitude;
-  let lon = coords.longitude;
-  console.log("coords", lat, lon);
+function render(lat, lon) {
+  function toPercent(date) {
+    return (date - dateStart) / totalTime;
+  }
+  
+  let dateNow = new Date();
+  let hours = dateNow.getHours();
+  let minutes = dateNow.getMinutes();
+  console.log("time", hours, minutes);
+  
+  let dateStart = new Date();
+  dateStart.setHours(0, 0, 0);
+  let dateEnd = new Date();
+  dateEnd.setHours(23, 59, 59);
+  let totalTime = dateEnd - dateStart;
   
   // Sun
   let now = toCoord(toPercent(dateNow), 0.85);
-  let dawn = toCoord(toPercent(sun.getCivilDawn(lat, lon)));
+  let dawnA = toCoord(toPercent(sun.getAstronomicalDawn(lat, lon)));
+  let dawnN = toCoord(toPercent(sun.getNauticalDawn(lat, lon)));
+  let dawnC = toCoord(toPercent(sun.getCivilDawn(lat, lon)));
   let sunrise = toCoord(toPercent(sun.getSunrise(lat, lon)));
   let sunset = toCoord(toPercent(sun.getSunset(lat, lon)));
-  let dusk = toCoord(toPercent(sun.getCivilDusk(lat, lon)));
-  console.log("dawn", dawn.value);
+  let duskC = toCoord(toPercent(sun.getCivilDusk(lat, lon)));
+  let duskN = toCoord(toPercent(sun.getNauticalDusk(lat, lon)));
+  let duskA = toCoord(toPercent(sun.getAstronomicalDusk(lat, lon)));
+  console.log("dawn", dawnA.value, dawnN.value, dawnC.value);
   console.log("sunrise", sunrise.value);
-  console.log("dusk", dusk.value);
   console.log("sunset", sunset.value);
+  console.log("dusk", duskC.value, duskN.value, duskA.value);
   
-  setPath($(".sunrise"), dawn, sunrise);
+  setPath($(".sunrise"), dawnC, sunrise);
   setPath($(".day"), sunrise, sunset);
-  setPath($(".sunset"), sunset, dusk);
-  setPath($(".night"), dusk, dawn);
+  setPath($(".sunset"), sunset, duskC);
+  setPath($(".night"), duskC, dawnC);
   
-  if (now.value > sunrise.value && now.value < sunset.value) {
-    document.body.dataset.phase = "day";
+  let phaseNow;
+  if (now.value > duskC.value) {
+    phaseNow = "night";
+  } else if (now.value > sunset.value) {
+    phaseNow = "dusk";
+  } else if (now.value > sunrise.value) {
+    phaseNow = "day";
   } else {
-    document.body.dataset.phase = "night";
+    phaseNow = "dawn";
   }
+  document.body.dataset.phase = phaseNow;
   
   // Seasons
   let yearNow = dateNow.getFullYear();
@@ -100,4 +106,18 @@ navigator.geolocation.getCurrentPosition((position) => {
   // Now
   $(".now").setAttribute("x2", now.x);
   $(".now").setAttribute("y2", now.y);
-});
+}
+
+function onInterval() {
+  navigator.geolocation.getCurrentPosition((position) => {
+    let {coords} = position;
+    let lat = coords.latitude;
+    let lon = coords.longitude;
+    console.log("coords", lat, lon);
+    
+    render(lat, lon);
+  });
+}
+
+setInterval(onInterval, 60 * 1000);
+onInterval();
