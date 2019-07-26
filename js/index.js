@@ -150,8 +150,7 @@ function render(lat, lon) {
   console.log("winter", winter);
   
   // Now
-  $(".now").setAttribute("x2", now.x);
-  $(".now").setAttribute("y2", now.y);
+  $(".now").setAttribute("transform", `rotate(${now.value * 360})`);
 }
 
 function onInterval() {

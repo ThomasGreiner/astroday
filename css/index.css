@@ -2,6 +2,8 @@ body {
   margin: 0;
   padding: 100px;
   text-align: center;
+  /* Use darkest color by default to avoid bright flash on reload at night */
+  background-color: #111;
   overflow: hidden;
 }
 
@@ -30,30 +32,33 @@ svg {
   transform: rotate(90deg);
 }
 
-svg .now,
 svg .labels line {
   stroke: #999;
   stroke-width: 0.005;
 }
 
+svg .center {
+  fill: #111;
+}
+
 body[data-phase="day"] svg .now {
-  stroke: #AAA;
+  fill: #AAA;
 }
 
 body[data-phase="night"] svg .now {
-  stroke: #444;
+  fill: #444;
 }
 
 body[data-phase="twilight-astronomical"] svg .now {
-  stroke: #777;
+  fill: #777;
 }
 
 body[data-phase="twilight-civil"] svg .now {
-  stroke: #777;
+  fill: #777;
 }
 
 body[data-phase="twilight-nautical"] svg .now {
-  stroke: #444;
+  fill: #444;
 }
 
 svg .day {
