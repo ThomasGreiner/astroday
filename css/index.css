@@ -30,22 +30,29 @@ svg {
   transform: rotate(90deg);
 }
 
+svg .now,
 svg .labels line {
-  stroke: #888;
-  stroke-width: 0.005;
-}
-
-svg .now {
-  /* TODO: implement twilight colors instead */
-  stroke: #F00;
+  stroke: #999;
   stroke-width: 0.005;
 }
 
 body[data-phase="day"] svg .now {
-  stroke: #BBB;
+  stroke: #AAA;
 }
 
 body[data-phase="night"] svg .now {
+  stroke: #444;
+}
+
+body[data-phase="twilight-astronomical"] svg .now {
+  stroke: #777;
+}
+
+body[data-phase="twilight-civil"] svg .now {
+  stroke: #777;
+}
+
+body[data-phase="twilight-nautical"] svg .now {
   stroke: #444;
 }
 
