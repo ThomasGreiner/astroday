@@ -126,6 +126,10 @@ body.setting-hide-twilight svg .dusk {
   fill: #111;
 }
 
+body:not(.setting-hide-during-night) svg .night-overlay {
+  display: none;
+}
+
 /*******************************************************************************
  * Sidebar
  ******************************************************************************/

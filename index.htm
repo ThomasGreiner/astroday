@@ -11,6 +11,9 @@
 
 <main>
   <svg width="1" height="1" viewBox="-1 -1 2 2">
+    <defs>
+      <path id="night" class="night"/>
+    </defs>
     <circle class="background" cx="0" cy="0" r="0.99"/>
     <path class="dawn astronomical"/>
     <path class="dawn nautical"/>
@@ -19,11 +22,12 @@
     <path class="dusk civil"/>
     <path class="dusk nautical"/>
     <path class="dusk astronomical"/>
-    <path class="night"/>
+    <use href="#night"/>
     <path class="season"/>
     <path class="now" d="M0.2 0 L 0.8 -0.01 A 0.01 0.01 0 0 1 0.8 0.01"/>
     <circle class="center" cx="0" cy="0" r="0.03"/>
     <g class="labels"></g>
+    <use class="night-overlay" href="#night"/>
   </svg>
 </main>
 
@@ -52,6 +56,10 @@
     <label>
       <input name="hide-season" type="checkbox" checked>
       Show season
+    </label>
+    <label>
+      <input name="hide-during-night" type="checkbox" checked>
+      Show time during night
     </label>
   </form>
 </aside>
