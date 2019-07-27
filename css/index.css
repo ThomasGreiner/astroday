@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Ubuntu, Helvetica, Arial, sans-serif;
@@ -32,7 +36,10 @@ main {
 }
 
 svg {
-  zoom: 400;
+  width: 100%;
+  height: 100%;
+  max-width: 80vw;
+  max-height: 80vh;
   transform: rotate(90deg);
 }
 
@@ -169,6 +176,7 @@ aside form {
   color: #EEE;
   background-color: #555;
   box-shadow: -0.5em 0 0 #555C;
+  overflow: auto;
 }
 
 aside:not(.expanded) form {

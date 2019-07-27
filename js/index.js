@@ -2,6 +2,7 @@
 
 import * as seasons from "../lib/astrolib/seasons.js";
 import * as sun from "../lib/astrolib/sun.js";
+import * as location from "./location.js";
 import {$} from "./utils.js";
 
 function toRad(value) {
@@ -188,16 +189,13 @@ function render(lat, lon) {
   $(".now").setAttribute("transform", `rotate(${now.value * 360})`);
 }
 
-function onInterval() {
-  navigator.geolocation.getCurrentPosition((position) => {
-    let {coords} = position;
-    let lat = coords.latitude;
-    let lon = coords.longitude;
+function onUpdate() {
+  location.getCoords().then(([lat, lon]) => {
     console.log("coords", lat, lon);
-    
     render(lat, lon);
   });
 }
 
-setInterval(onInterval, 60 * 1000);
-onInterval();
+setInterval(onUpdate, 60 * 1000);
+onUpdate();
+location.on("change", onUpdate);
