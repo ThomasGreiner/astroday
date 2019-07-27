@@ -3,12 +3,14 @@
 <head>
   <title></title>
   <link rel="stylesheet" href="css/index.css">
+  <script type="module" src="js/sidebar.js" defer></script>
   <script type="module" src="js/index.js" defer></script>
 </head>
 <body>
 
 <main>
   <svg width="1" height="1" viewBox="-1 -1 2 2">
+    <circle class="background" cx="0" cy="0" r="0.99"/>
     <path class="dawn astronomical"/>
     <path class="dawn nautical"/>
     <path class="dawn civil"/>
@@ -34,19 +36,19 @@
       </select>
     </label>
     <label>
-      <input type="checkbox" checked disabled>
+      <input name="hide-hours" type="checkbox" checked>
       Show hours
     </label>
     <label>
-      <input type="checkbox" checked disabled>
+      <input name="hide-now" type="checkbox" checked>
       Show current time
     </label>
     <label>
-      <input type="checkbox" checked disabled>
+      <input name="hide-twilight" type="checkbox" checked>
       Show twilight
     </label>
     <label>
-      <input type="checkbox" checked disabled>
+      <input name="hide-season" type="checkbox" checked>
       Show season
     </label>
   </form>

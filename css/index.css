@@ -41,8 +41,16 @@ svg .labels line {
   stroke-width: 0.005;
 }
 
+body.setting-hide-hours svg .labels {
+  display: none;
+}
+
 svg .center {
   fill: #111;
+}
+
+body.setting-hide-now svg .now {
+  display: none;
 }
 
 body[data-phase="day"] svg .now {
@@ -63,6 +71,10 @@ body[data-phase="twilight-civil"] svg .now {
 
 body[data-phase="twilight-nautical"] svg .now {
   fill: #444;
+}
+
+body.setting-hide-season svg .season {
+  display: none;
 }
 
 body[data-season="spring"] svg .season {
@@ -101,6 +113,12 @@ svg .nautical {
   fill: #777;
 }
 
+body.setting-hide-twilight svg .background,
+body.setting-hide-twilight svg .dawn,
+body.setting-hide-twilight svg .dusk {
+  fill: #111;
+}
+
 /*******************************************************************************
  * Sidebar
  ******************************************************************************/
@@ -115,6 +133,7 @@ aside {
   padding: 30px;
   color: #EEE;
   background-color: #555;
+  box-shadow: -0.5em 0 0 #555C;
 }
 
 aside h3 {

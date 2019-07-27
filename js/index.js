@@ -2,8 +2,7 @@
 
 import * as seasons from "../lib/astrolib/seasons.js";
 import * as sun from "../lib/astrolib/sun.js";
-
-const $ = (selector) => document.querySelector(selector);
+import {$} from "./utils.js";
 
 function toRad(value) {
   return Math.PI * 2 * value;
