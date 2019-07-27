@@ -153,11 +153,9 @@ function render(lat, lon) {
   // Seasons
   let yearNow = dateNow.getFullYear();
   let spring = toCoord(perYear(seasons.getVernalEquinox(yearNow)));
-  // TODO: don't hardcode second parameter
-  let summer = toCoord(perYear(seasons.getSummerSolstice(yearNow, false)));
+  let summer = toCoord(perYear(seasons.getSummerSolstice(yearNow, lat < 0)));
   let autumn = toCoord(perYear(seasons.getAutumnalEquinox(yearNow)));
-  // TODO: don't hardcode second parameter
-  let winter = toCoord(perYear(seasons.getWinterSolstice(yearNow, false)));
+  let winter = toCoord(perYear(seasons.getWinterSolstice(yearNow, lat < 0)));
   console.log("spring", spring);
   console.log("summer", summer);
   console.log("autumn", autumn);
