@@ -61,6 +61,22 @@ body[data-phase="twilight-nautical"] svg .now {
   fill: #444;
 }
 
+body[data-season="spring"] svg .season {
+  fill: hsla(120, 100%, 77%, 0.5);
+}
+
+body[data-season="summer"] svg .season {
+  fill: hsla(60, 100%, 77%, 0.5);
+}
+
+body[data-season="autumn"] svg .season {
+  fill: hsla(0, 100%, 77%, 0.5);
+}
+
+body[data-season="winter"] svg .season {
+  fill: hsla(180, 100%, 77%, 0.5);
+}
+
 svg .day {
   fill: #EEE;
 }

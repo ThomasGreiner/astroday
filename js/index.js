@@ -18,7 +18,7 @@ function toCoord(value, radius = 1) {
   };
 }
 
-function setPath(path, from, to) {
+function setPath(path, from, to, radius = 1) {
   let share = 0;
   if (to.value > from.value) {
     share = to.value - from.value;
@@ -26,7 +26,7 @@ function setPath(path, from, to) {
     share += to.value + (1 - from.value);
   }
   let isLarge = (share > 0.5) ? 1 : 0;
-  path.setAttribute("d", `M${from.x} ${from.y} A 1 1 0 ${isLarge} 1 ${to.x} ${to.y} L 0 0`);
+  path.setAttribute("d", `M${from.x} ${from.y} A ${radius} ${radius} 0 ${isLarge} 1 ${to.x} ${to.y} L 0 0`);
 }
 
 function addHourIndicator(hour) {
@@ -44,8 +44,38 @@ for (let i = 0; i < 24; i++) {
   addHourIndicator(i);
 }
 
+function getPrevious(current, items) {
+  items = [current, ...items]
+    .filter((item) => !!item.value)
+    .sort((a, b) => a.value % 1 - b.value % 1);
+  
+  let prev;
+  let idx = items.indexOf(current);
+  if (idx === 0) {
+    prev = items[items.length - 1];
+  } else {
+    prev = items[idx - 1];
+  }
+  return prev;
+}
+
 function render(lat, lon) {
-  function toPercent(date) {
+  function perDay(date) {
+    let dateStart = new Date();
+    dateStart.setHours(0, 0, 0);
+    let dateEnd = new Date();
+    dateEnd.setHours(23, 59, 59);
+    let totalTime = dateEnd - dateStart;
+    
+    return (date - dateStart) / totalTime;
+  }
+  
+  function perYear(date) {
+    let year = dateNow.getFullYear();
+    let dateStart = new Date(year, 0, 1);
+    let dateEnd = new Date(year + 1, 0, 1) - 1;
+    let totalTime = dateEnd - dateStart;
+    
     return (date - dateStart) / totalTime;
   }
   
@@ -54,22 +84,16 @@ function render(lat, lon) {
   let minutes = dateNow.getMinutes();
   console.log("time", hours, minutes);
   
-  let dateStart = new Date();
-  dateStart.setHours(0, 0, 0);
-  let dateEnd = new Date();
-  dateEnd.setHours(23, 59, 59);
-  let totalTime = dateEnd - dateStart;
-  
   // Sun
-  let now = toCoord(toPercent(dateNow), 0.85);
-  let dawnA = toCoord(toPercent(sun.getAstronomicalDawn(lat, lon)));
-  let dawnN = toCoord(toPercent(sun.getNauticalDawn(lat, lon)));
-  let dawnC = toCoord(toPercent(sun.getCivilDawn(lat, lon)));
-  let sunrise = toCoord(toPercent(sun.getSunrise(lat, lon)));
-  let sunset = toCoord(toPercent(sun.getSunset(lat, lon)));
-  let duskC = toCoord(toPercent(sun.getCivilDusk(lat, lon)));
-  let duskN = toCoord(toPercent(sun.getNauticalDusk(lat, lon)));
-  let duskA = toCoord(toPercent(sun.getAstronomicalDusk(lat, lon)));
+  let now = toCoord(perDay(dateNow), 0.85);
+  let dawnA = toCoord(perDay(sun.getAstronomicalDawn(lat, lon)));
+  let dawnN = toCoord(perDay(sun.getNauticalDawn(lat, lon)));
+  let dawnC = toCoord(perDay(sun.getCivilDawn(lat, lon)));
+  let sunrise = toCoord(perDay(sun.getSunrise(lat, lon)));
+  let sunset = toCoord(perDay(sun.getSunset(lat, lon)));
+  let duskC = toCoord(perDay(sun.getCivilDusk(lat, lon)));
+  let duskN = toCoord(perDay(sun.getNauticalDusk(lat, lon)));
+  let duskA = toCoord(perDay(sun.getAstronomicalDusk(lat, lon)));
   console.log("now", now.value);
   console.log("dawn", dawnA.value, dawnN.value, dawnC.value);
   console.log("sunrise", sunrise.value);
@@ -77,26 +101,14 @@ function render(lat, lon) {
   console.log("dusk", duskC.value, duskN.value, duskA.value);
   
   // Determine current phase independent of their order
-  let events = [
-    now,
+  let phase = getPrevious(now, [
     dawnA, dawnN, dawnC,
     sunrise, sunset,
     duskC, duskN, duskA
-  ];
-  events = events
-    .filter((event) => !!event.value)
-    .sort((a, b) => a.value % 1 - b.value % 1);
-  
-  let eventPrev;
-  let idxNow = events.indexOf(now);
-  if (idxNow === 0) {
-    eventPrev = events[events.length - 1];
-  } else {
-    eventPrev = events[idxNow - 1];
-  }
+  ]);
   
   let phaseNow;
-  switch (eventPrev) {
+  switch (phase) {
     case dawnA:
     case duskN:
       // Skip if there's no astronomical twilight
@@ -140,14 +152,40 @@ function render(lat, lon) {
   
   // Seasons
   let yearNow = dateNow.getFullYear();
-  let spring = seasons.getVernalEquinox(yearNow);
-  let summer = seasons.getSummerSolstice(yearNow, false);
-  let autumn = seasons.getAutumnalEquinox(yearNow);
-  let winter = seasons.getWinterSolstice(yearNow, false);
+  let spring = toCoord(perYear(seasons.getVernalEquinox(yearNow)));
+  // TODO: don't hardcode second parameter
+  let summer = toCoord(perYear(seasons.getSummerSolstice(yearNow, false)));
+  let autumn = toCoord(perYear(seasons.getAutumnalEquinox(yearNow)));
+  // TODO: don't hardcode second parameter
+  let winter = toCoord(perYear(seasons.getWinterSolstice(yearNow, false)));
   console.log("spring", spring);
   console.log("summer", summer);
   console.log("autumn", autumn);
   console.log("winter", winter);
+  
+  let today = toCoord(perYear(dateNow));
+  let seasonStart = toCoord(perDay(sun.getSunrise(lat, lon)), 0.1);
+  let seasonEnd = toCoord(perDay(sun.getSunset(lat, lon)), 0.1);
+  setPath($(".season"), seasonStart, seasonEnd, 0.1);
+  let season = getPrevious(today, [spring, summer, autumn, winter]);
+  
+  let seasonNow;
+  switch (season) {
+    case spring:
+      seasonNow = "spring";
+      break;
+    case summer:
+      seasonNow = "summer";
+      break;
+    case autumn:
+      seasonNow = "autumn";
+      break;
+    case winter:
+      seasonNow = "winter";
+      break;
+  }
+  console.log("season", seasonNow);
+  document.body.dataset.season = seasonNow;
   
   // Now
   $(".now").setAttribute("transform", `rotate(${now.value * 360})`);
