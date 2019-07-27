@@ -15,8 +15,10 @@ site.add(site.hosts.default, {
         "locations.js": map("data/locations.js")
       },
       "js": {
+        "emitter.js": map("js/emitter.js"),
         "index.js": map("js/index.js"),
         "location.js": map("js/location.js"),
+        "settings.js": map("js/settings.js"),
         "sidebar.js": map("js/sidebar.js"),
         "utils.js": map("js/utils.js")
       },

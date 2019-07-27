@@ -1,9 +1,13 @@
 import * as locations from "../data/locations.js";
+import {Emitter} from "./emitter.js";
 
 let currentId = null;
+let emitter = new Emitter();
 let listenersByName = new Map([
   ["change", []]
 ]);
+
+export const on = emitter.on.bind(emitter);
 
 class Location {
   get coords() {
@@ -82,16 +86,6 @@ export function forEach(fn) {
   }
 }
 
-function dispatch(name) {
-  let listeners = listenersByName.get(name);
-  if (!listeners)
-    throw new Error("Invalid event name");
-  
-  for (let listener of listeners) {
-    listener();
-  }
-}
-
 export function getCoords() {
   if (currentId) {
     try {
@@ -113,15 +107,7 @@ export function getCoords() {
   });
 }
 
-export function on(name, listener) {
-  let listeners = listenersByName.get(name);
-  if (!listeners)
-    throw new Error("Invalid event name");
-  
-  listeners.push(listener);
-}
-
 export function setId(id) {
   currentId = id || null;
-  dispatch("change");
+  emitter.dispatch("change");
 }
