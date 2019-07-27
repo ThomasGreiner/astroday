@@ -1,0 +1,11 @@
+{
+  "name": "Astroday",
+  "short_name": "Astroday",
+  "description": "...",
+  "start_url": "/webapps/astroday/?ref=manifest",
+  "display": "standalone",
+  "orientation": "portrait",
+  "icons": [],
+  "background_color": "#111",
+  "theme_color": "#111"
+}

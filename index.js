@@ -28,7 +28,8 @@ site.add(site.hosts.default, {
           "sun.js": map("lib/astrolib/sun.js"),
           "utils.js": map("lib/astrolib/utils.js")
         }
-      }
+      },
+      "manifest.json": map("manifest.json")
     }
   }
 });
