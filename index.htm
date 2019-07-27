@@ -7,20 +7,50 @@
 </head>
 <body>
 
-<svg width="1" height="1" viewBox="-1 -1 2 2">
-  <path class="dawn astronomical"/>
-  <path class="dawn nautical"/>
-  <path class="dawn civil"/>
-  <path class="day"/>
-  <path class="dusk civil"/>
-  <path class="dusk nautical"/>
-  <path class="dusk astronomical"/>
-  <path class="night"/>
-  <path class="season"/>
-  <path class="now" d="M0.2 0 L 0.8 -0.01 A 0.01 0.01 0 0 1 0.8 0.01"/>
-  <circle class="center" cx="0" cy="0" r="0.03"/>
-  <g class="labels"></g>
-</svg>
+<main>
+  <svg width="1" height="1" viewBox="-1 -1 2 2">
+    <path class="dawn astronomical"/>
+    <path class="dawn nautical"/>
+    <path class="dawn civil"/>
+    <path class="day"/>
+    <path class="dusk civil"/>
+    <path class="dusk nautical"/>
+    <path class="dusk astronomical"/>
+    <path class="night"/>
+    <path class="season"/>
+    <path class="now" d="M0.2 0 L 0.8 -0.01 A 0.01 0.01 0 0 1 0.8 0.01"/>
+    <circle class="center" cx="0" cy="0" r="0.03"/>
+    <g class="labels"></g>
+  </svg>
+</main>
+
+<aside>
+  <form>
+    <h3>Settings</h3>
+    <label>
+      Location
+      <select>
+        <option value="">Current location</option>
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" checked disabled>
+      Show hours
+    </label>
+    <label>
+      <input type="checkbox" checked disabled>
+      Show current time
+    </label>
+    <label>
+      <input type="checkbox" checked disabled>
+      Show twilight
+    </label>
+    <label>
+      <input type="checkbox" checked disabled>
+      Show season
+    </label>
+  </form>
+</aside>
 
 </body>
 </html>
