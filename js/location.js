@@ -1,6 +1,11 @@
 import * as locations from "../data/locations.js";
 import {Emitter} from "./emitter.js";
 
+export const ERROR_PERMISSION = 1;
+export const ERROR_POSITION = 2;
+export const ERROR_TIMEOUT = 3;
+export const ERROR_UNKNOWN = 4;
+
 let currentId = null;
 let emitter = new Emitter();
 let listenersByName = new Map([
@@ -92,18 +97,35 @@ export function getCoords() {
       let location = byId(currentId);
       return Promise.resolve(location.coords);
     } catch (ex) {
-      console.error(ex);
+      return Promise.reject({
+        code: ERROR_UNKNOWN,
+        message: "Unknown location"
+      });
     }
   }
   
-  return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      let {coords} = position;
-      resolve([
-        coords.latitude,
-        coords.longitude
-      ]);
-    });
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        let {coords} = position;
+        resolve([
+          coords.latitude,
+          coords.longitude
+        ]);
+      },
+      (err) => {
+        switch (err.code) {
+          case ERROR_PERMISSION:
+            resolve(null);
+            break;
+          case ERROR_POSITION:
+          case ERROR_TIMEOUT:
+            reject(err);
+            break;
+        }
+      },
+      {enableHighAccuracy: false}
+    );
   });
 }
 

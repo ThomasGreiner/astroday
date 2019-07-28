@@ -59,55 +59,49 @@ function getPrevious(current, items) {
   return prev;
 }
 
-function render(lat, lon) {
-  function perDay(date) {
-    let dateStart = new Date();
-    dateStart.setHours(0, 0, 0);
-    let dateEnd = new Date();
-    dateEnd.setHours(23, 59, 59);
-    let totalTime = dateEnd - dateStart;
-    
-    return (date - dateStart) / totalTime;
-  }
+function perDay(date) {
+  let dateStart = new Date();
+  dateStart.setHours(0, 0, 0);
+  let dateEnd = new Date();
+  dateEnd.setHours(23, 59, 59);
+  let totalTime = dateEnd - dateStart;
   
-  function perYear(date) {
-    let year = dateNow.getFullYear();
-    let dateStart = new Date(year, 0, 1);
-    let dateEnd = new Date(year + 1, 0, 1) - 1;
-    let totalTime = dateEnd - dateStart;
-    
-    return (date - dateStart) / totalTime;
-  }
+  return (date - dateStart) / totalTime;
+}
+
+function perYear(date) {
+  let dateNow = new Date();
+  let year = dateNow.getFullYear();
+  let dateStart = new Date(year, 0, 1);
+  let dateEnd = new Date(year + 1, 0, 1) - 1;
+  let totalTime = dateEnd - dateStart;
   
+  return (date - dateStart) / totalTime;
+}
+
+function render(phases, seasons, seasonEdges) {
   let dateNow = new Date();
   let hours = dateNow.getHours();
   let minutes = dateNow.getMinutes();
   console.log("time", hours, minutes);
   
-  // Sun
   let now = toCoord(perDay(dateNow), 0.85);
-  let dawnA = toCoord(perDay(sun.getAstronomicalDawn(lat, lon)));
-  let dawnN = toCoord(perDay(sun.getNauticalDawn(lat, lon)));
-  let dawnC = toCoord(perDay(sun.getCivilDawn(lat, lon)));
-  let sunrise = toCoord(perDay(sun.getSunrise(lat, lon)));
-  let sunset = toCoord(perDay(sun.getSunset(lat, lon)));
-  let duskC = toCoord(perDay(sun.getCivilDusk(lat, lon)));
-  let duskN = toCoord(perDay(sun.getNauticalDusk(lat, lon)));
-  let duskA = toCoord(perDay(sun.getAstronomicalDusk(lat, lon)));
   console.log("now", now.value);
+  
+  // Phases
+  // Determine current phase independent of their order
+  let [
+    dawnA, dawnN, dawnC,
+    sunrise, sunset,
+    duskC, duskN, duskA
+  ] = phases;
   console.log("dawn", dawnA.value, dawnN.value, dawnC.value);
   console.log("sunrise", sunrise.value);
   console.log("sunset", sunset.value);
   console.log("dusk", duskC.value, duskN.value, duskA.value);
   
-  // Determine current phase independent of their order
-  let phase = getPrevious(now, [
-    dawnA, dawnN, dawnC,
-    sunrise, sunset,
-    duskC, duskN, duskA
-  ]);
-  
   let phaseNow;
+  let phase = getPrevious(now, phases);
   switch (phase) {
     case dawnA:
     case duskN:
@@ -130,7 +124,6 @@ function render(lat, lon) {
   }
   document.body.dataset.phase = phaseNow;
   
-  // Phases
   if (dawnA.value) {
     setPath($(".dawn.astronomical"), dawnA, dawnN);
   } else {
@@ -151,23 +144,18 @@ function render(lat, lon) {
   setPath($(".night"), duskA, dawnA);
   
   // Seasons
-  let yearNow = dateNow.getFullYear();
-  let spring = toCoord(perYear(seasons.getVernalEquinox(yearNow)));
-  let summer = toCoord(perYear(seasons.getSummerSolstice(yearNow, lat < 0)));
-  let autumn = toCoord(perYear(seasons.getAutumnalEquinox(yearNow)));
-  let winter = toCoord(perYear(seasons.getWinterSolstice(yearNow, lat < 0)));
+  let [spring, summer, autumn, winter] = seasons;
+  let [seasonStart, seasonEnd] = seasonEdges;
   console.log("spring", spring);
   console.log("summer", summer);
   console.log("autumn", autumn);
   console.log("winter", winter);
   
-  let today = toCoord(perYear(dateNow));
-  let seasonStart = toCoord(perDay(sun.getSunrise(lat, lon)), 0.1);
-  let seasonEnd = toCoord(perDay(sun.getSunset(lat, lon)), 0.1);
   setPath($(".season"), seasonStart, seasonEnd, 0.1);
-  let season = getPrevious(today, [spring, summer, autumn, winter]);
   
   let seasonNow;
+  let today = toCoord(perYear(dateNow));
+  let season = getPrevious(today, [spring, summer, autumn, winter]);
   switch (season) {
     case spring:
       seasonNow = "spring";
@@ -189,11 +177,66 @@ function render(lat, lon) {
   $(".now").setAttribute("transform", `rotate(${now.value * 360})`);
 }
 
+function renderWithCoords(lat, lon) {
+  // Phases
+  let dawnA = toCoord(perDay(sun.getAstronomicalDawn(lat, lon)));
+  let dawnN = toCoord(perDay(sun.getNauticalDawn(lat, lon)));
+  let dawnC = toCoord(perDay(sun.getCivilDawn(lat, lon)));
+  let sunrise = toCoord(perDay(sun.getSunrise(lat, lon)));
+  let sunset = toCoord(perDay(sun.getSunset(lat, lon)));
+  let duskC = toCoord(perDay(sun.getCivilDusk(lat, lon)));
+  let duskN = toCoord(perDay(sun.getNauticalDusk(lat, lon)));
+  let duskA = toCoord(perDay(sun.getAstronomicalDusk(lat, lon)));
+  
+  // Seasons
+  let dateNow = new Date();
+  let yearNow = dateNow.getFullYear();
+  
+  let spring = toCoord(perYear(seasons.getVernalEquinox(yearNow)));
+  let summer = toCoord(perYear(seasons.getSummerSolstice(yearNow, lat < 0)));
+  let autumn = toCoord(perYear(seasons.getAutumnalEquinox(yearNow)));
+  let winter = toCoord(perYear(seasons.getWinterSolstice(yearNow, lat < 0)));
+  
+  let seasonStart = toCoord(perDay(sun.getSunrise(lat, lon)), 0.1);
+  let seasonEnd = toCoord(perDay(sun.getSunset(lat, lon)), 0.1);
+  
+  render(
+    [
+      dawnA, dawnN, dawnC,
+      sunrise, sunset,
+      duskC, duskN, duskA
+    ],
+    [spring, summer, autumn, winter],
+    [seasonStart, seasonEnd]
+  );
+}
+
+function renderWithoutCoords() {
+  // TODO: NYI
+}
+
 function onUpdate() {
-  location.getCoords().then(([lat, lon]) => {
-    console.log("coords", lat, lon);
-    render(lat, lon);
-  });
+  location.getCoords()
+    .then(([lat, lon]) => {
+      console.log("coords", lat, lon);
+      renderWithCoords(lat, lon);
+    })
+    .catch((err) => {
+      console.error(err.message);
+      switch (err.code) {
+        case location.ERROR_PERMISSION:
+          // TODO: noop, ask for permission again
+          break;
+        case location.ERROR_POSITION:
+        case location.ERROR_TIMEOUT:
+          // TODO: noop, try again later
+          break;
+        case location.ERROR_UNKNOWN:
+          // TODO: noop, select other location
+          break;
+      }
+      renderWithCoords();
+    });
 }
 
 setInterval(onUpdate, 60 * 1000);
