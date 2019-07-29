@@ -10,10 +10,18 @@ function onChange(input) {
   if (input.type == "checkbox") {
     document.body.classList.toggle(`setting-${input.name}`, !input.checked);
     settings.set(input.name, !input.checked);
-  } else {
-    location.setId(input.value);
-    settings.set(input.name, input.value);
+    return;
   }
+  
+  switch (input.name) {
+    case "location":
+      location.setId(input.value);
+      break;
+    case "midnight-direction":
+      document.body.dataset.midnightDir = input.value;
+      break;
+  }
+  settings.set(input.name, input.value);
 }
 
 $("aside form").addEventListener("change", (ev) => {

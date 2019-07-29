@@ -40,7 +40,23 @@ svg {
   height: 100%;
   max-width: 80vw;
   max-height: 80vh;
+}
+
+body[data-midnight-dir="right"] svg {
+  transform: rotate(0deg);
+}
+
+body:not([data-midnight-dir]) svg,
+body[data-midnight-dir="bottom"] {
   transform: rotate(90deg);
+}
+
+body[data-midnight-dir="left"] svg {
+  transform: rotate(180deg);
+}
+
+body[data-midnight-dir="top"] svg {
+  transform: rotate(270deg);
 }
 
 svg .labels line {
