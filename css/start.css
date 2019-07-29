@@ -1,0 +1,117 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Ubuntu, Helvetica, Arial, sans-serif;
+  text-align: center;
+  background-color: #EEE;
+}
+
+/*******************************************************************************
+ * Header
+ ******************************************************************************/
+
+.title {
+  display: flex;
+  height: 1em;
+  justify-content: center;
+  align-items: center;
+  font-size: 10vw;
+  font-weight: bold;
+  background-image: linear-gradient(to right, #111 49.8%, #EEE 50.2%);
+}
+
+.title .begin {
+  color: #EEE;
+}
+
+.title .middle {
+  display: flex;
+  position: relative;
+  height: 100%;
+  align-items: center;
+  background-image: linear-gradient(to bottom right, #111 49.8%, #EEE 50.2%);
+}
+
+.title svg {
+  width: 0.7em;
+  height: 0.7em;
+  margin-top: 0.2em;
+}
+
+.title .end {
+  margin-left: 0.1em;
+  color: #111;
+}
+
+.actions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2em;
+}
+
+.actions button {
+  cursor: pointer;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 1em;
+  font-family: inherit;
+  font-size: 2em;
+  font-weight: 600;
+  color: #EEE;
+  background-color: #111;
+  box-shadow: -0.1em -0.05em 0 #EEE;
+  transition: box-shadow 100ms;
+}
+
+.actions button:hover {
+  box-shadow: -0.1em -0.05em 0 0.1em #EEE;
+}
+
+@media (orientation: portrait) {
+  .actions {
+    padding: 1em;
+  }
+  
+  .actions button {
+    font-size: 1em;
+  }
+}
+
+/*******************************************************************************
+ * Content
+ ******************************************************************************/
+
+main {
+  width: 500px;
+  padding: 50px 0;
+  margin: auto;
+}
+
+main > article {
+  display: flex;
+  flex-direction: row;
+}
+
+main > article > h3 {
+  padding: 0 1em;
+}
+
+main > article > section {
+  flex: 1;
+}
+
+main button,
+main select {
+  display: block;
+  width: 100%;
+}
+
+@media (orientation: portrait) {
+  main > article {
+    flex-direction: column;
+  }
+}

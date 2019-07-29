@@ -9,7 +9,8 @@ site.add(site.hosts.default, {
     "astroday": {
       "": map("index.htm"),
       "css": {
-        "index.css": map("css/index.css")
+        "index.css": map("css/index.css"),
+        "start.css": map("css/start.css")
       },
       "data": {
         "locations.js": map("data/locations.js")
@@ -20,6 +21,7 @@ site.add(site.hosts.default, {
         "location.js": map("js/location.js"),
         "settings.js": map("js/settings.js"),
         "sidebar.js": map("js/sidebar.js"),
+        "start.js": map("js/start.js"),
         "utils.js": map("js/utils.js")
       },
       "lib": {
@@ -29,7 +31,8 @@ site.add(site.hosts.default, {
           "utils.js": map("lib/astrolib/utils.js")
         }
       },
-      "manifest.json": map("manifest.json")
+      "manifest.json": map("manifest.json"),
+      "start": map("start.htm")
     }
   }
 });

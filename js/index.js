@@ -90,6 +90,9 @@ function render(phases, seasons, seasonEdges) {
   
   // Phases
   // Determine current phase independent of their order
+  phases = phases
+    .map((date) => perDay(date))
+    .map((rel) => toCoord(rel))
   let [
     dawnA, dawnN, dawnC,
     sunrise, sunset,
@@ -144,8 +147,12 @@ function render(phases, seasons, seasonEdges) {
   setPath($(".night"), duskA, dawnA);
   
   // Seasons
-  let [spring, summer, autumn, winter] = seasons;
-  let [seasonStart, seasonEnd] = seasonEdges;
+  let [spring, summer, autumn, winter] = seasons
+    .map((date) => perYear(date))
+    .map((rel) => toCoord(rel, 0.1));
+  let [seasonStart, seasonEnd] = seasonEdges
+    .map((date) => perDay(date))
+    .map((rel) => toCoord(rel, 0.1));
   console.log("spring", spring);
   console.log("summer", summer);
   console.log("autumn", autumn);
@@ -179,26 +186,26 @@ function render(phases, seasons, seasonEdges) {
 
 function renderWithCoords(lat, lon) {
   // Phases
-  let dawnA = toCoord(perDay(sun.getAstronomicalDawn(lat, lon)));
-  let dawnN = toCoord(perDay(sun.getNauticalDawn(lat, lon)));
-  let dawnC = toCoord(perDay(sun.getCivilDawn(lat, lon)));
-  let sunrise = toCoord(perDay(sun.getSunrise(lat, lon)));
-  let sunset = toCoord(perDay(sun.getSunset(lat, lon)));
-  let duskC = toCoord(perDay(sun.getCivilDusk(lat, lon)));
-  let duskN = toCoord(perDay(sun.getNauticalDusk(lat, lon)));
-  let duskA = toCoord(perDay(sun.getAstronomicalDusk(lat, lon)));
+  let dawnA = sun.getAstronomicalDawn(lat, lon);
+  let dawnN = sun.getNauticalDawn(lat, lon);
+  let dawnC = sun.getCivilDawn(lat, lon);
+  let sunrise = sun.getSunrise(lat, lon);
+  let sunset = sun.getSunset(lat, lon);
+  let duskC = sun.getCivilDusk(lat, lon);
+  let duskN = sun.getNauticalDusk(lat, lon);
+  let duskA = sun.getAstronomicalDusk(lat, lon);
   
   // Seasons
   let dateNow = new Date();
   let yearNow = dateNow.getFullYear();
   
-  let spring = toCoord(perYear(seasons.getVernalEquinox(yearNow)));
-  let summer = toCoord(perYear(seasons.getSummerSolstice(yearNow, lat < 0)));
-  let autumn = toCoord(perYear(seasons.getAutumnalEquinox(yearNow)));
-  let winter = toCoord(perYear(seasons.getWinterSolstice(yearNow, lat < 0)));
+  let spring = seasons.getVernalEquinox(yearNow);
+  let summer = seasons.getSummerSolstice(yearNow, lat < 0);
+  let autumn = seasons.getAutumnalEquinox(yearNow);
+  let winter = seasons.getWinterSolstice(yearNow, lat < 0);
   
-  let seasonStart = toCoord(perDay(sun.getSunrise(lat, lon)), 0.1);
-  let seasonEnd = toCoord(perDay(sun.getSunset(lat, lon)), 0.1);
+  let seasonStart = sun.getSunrise(lat, lon);
+  let seasonEnd = sun.getSunset(lat, lon);
   
   render(
     [
@@ -240,5 +247,5 @@ function onUpdate() {
 }
 
 setInterval(onUpdate, 60 * 1000);
-onUpdate();
 location.on("change", onUpdate);
+onUpdate();
