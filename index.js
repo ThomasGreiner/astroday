@@ -15,6 +15,10 @@ site.add(site.hosts.default, {
       "data": {
         "locations.js": map("data/locations.js")
       },
+      "img": {
+        "app192.png": map("img/app192.png"),
+        "app512.png": map("img/app512.png")
+      },
       "js": {
         "emitter.js": map("js/emitter.js"),
         "index.js": map("js/index.js"),

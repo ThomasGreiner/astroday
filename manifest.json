@@ -1,11 +1,22 @@
 {
   "name": "Astroday",
   "short_name": "Astroday",
-  "description": "...",
-  "start_url": "/webapps/astroday/?ref=manifest",
   "display": "standalone",
   "orientation": "portrait",
-  "icons": [],
+  "scope": "/webapps/astroday/",
+  "start_url": "/webapps/astroday/?ref=pwa",
   "background_color": "#111",
-  "theme_color": "#111"
+  "theme_color": "#EEE",
+  "icons": [
+    {
+      "src": "/webapps/astroday/img/app192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/webapps/astroday/img/app512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
 }
