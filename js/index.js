@@ -59,14 +59,12 @@ function getPrevious(current, items) {
   return prev;
 }
 
+// Percentage can't be calculated based on start and end of day
+// or otherwise it will be wrong on leap days
 function perDay(date) {
-  let dateStart = new Date();
-  dateStart.setHours(0, 0, 0);
-  let dateEnd = new Date();
-  dateEnd.setHours(23, 59, 59);
-  let totalTime = dateEnd - dateStart;
-  
-  return (date - dateStart) / totalTime;
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  return (hours * 60 + minutes) / (24 * 60);
 }
 
 function perYear(date) {
