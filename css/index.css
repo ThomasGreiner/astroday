@@ -47,7 +47,7 @@ body[data-midnight-dir="right"] svg {
 }
 
 body:not([data-midnight-dir]) svg,
-body[data-midnight-dir="bottom"] {
+body[data-midnight-dir="bottom"] svg {
   transform: rotate(90deg);
 }
 
