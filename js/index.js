@@ -5,6 +5,16 @@ import * as sun from "../lib/astrolib/sun.js";
 import * as location from "./location.js";
 import {$} from "./utils.js";
 
+const DEBUG = false;
+
+function log(...args)
+{
+  if (!DEBUG)
+    return;
+  
+  console.log(...args);
+}
+
 function toRad(value) {
   return Math.PI * 2 * value;
 }
@@ -81,10 +91,10 @@ function render(phases, seasons, seasonEdges) {
   let dateNow = new Date();
   let hours = dateNow.getHours();
   let minutes = dateNow.getMinutes();
-  console.log("time", hours, minutes);
+  log("time", hours, minutes);
   
   let now = toCoord(perDay(dateNow), 0.85);
-  console.log("now", now.value);
+  log("now", now.value);
   
   // Phases
   // Determine current phase independent of their order
@@ -96,10 +106,10 @@ function render(phases, seasons, seasonEdges) {
     sunrise, sunset,
     duskC, duskN, duskA
   ] = phases;
-  console.log("dawn", dawnA.value, dawnN.value, dawnC.value);
-  console.log("sunrise", sunrise.value);
-  console.log("sunset", sunset.value);
-  console.log("dusk", duskC.value, duskN.value, duskA.value);
+  log("dawn", dawnA.value, dawnN.value, dawnC.value);
+  log("sunrise", sunrise.value);
+  log("sunset", sunset.value);
+  log("dusk", duskC.value, duskN.value, duskA.value);
   
   let phaseNow;
   let phase = getPrevious(now, phases);
@@ -151,10 +161,10 @@ function render(phases, seasons, seasonEdges) {
   let [seasonStart, seasonEnd] = seasonEdges
     .map((date) => perDay(date))
     .map((rel) => toCoord(rel, 0.1));
-  console.log("spring", spring);
-  console.log("summer", summer);
-  console.log("autumn", autumn);
-  console.log("winter", winter);
+  log("spring", spring);
+  log("summer", summer);
+  log("autumn", autumn);
+  log("winter", winter);
   
   setPath($(".season"), seasonStart, seasonEnd, 0.1);
   
@@ -175,7 +185,7 @@ function render(phases, seasons, seasonEdges) {
       seasonNow = "winter";
       break;
   }
-  console.log("season", seasonNow);
+  log("season", seasonNow);
   document.body.dataset.season = seasonNow;
   
   // Now
@@ -223,7 +233,7 @@ function renderWithoutCoords() {
 function onUpdate() {
   location.getCoords()
     .then(([lat, lon]) => {
-      console.log("coords", lat, lon);
+      log("coords", lat, lon);
       renderWithCoords(lat, lon);
     })
     .catch((err) => {
