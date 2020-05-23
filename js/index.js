@@ -29,6 +29,11 @@ function toCoord(value, radius = 1) {
 }
 
 function setPath(path, from, to, radius = 1) {
+  if (!from.value || !to.value) {
+    path.removeAttribute("d");
+    return;
+  }
+  
   let share = 0;
   if (to.value > from.value) {
     share = to.value - from.value;
@@ -116,8 +121,7 @@ function render(phases, seasons, seasonEdges) {
   switch (phase) {
     case dawnA:
     case duskN:
-      // Skip if there's no astronomical twilight
-      phaseNow = (duskA.value) ? "twilight-astronomical" : "night";
+      phaseNow = "twilight-astronomical";
       break;
     case dawnN:
     case duskC:
@@ -135,23 +139,13 @@ function render(phases, seasons, seasonEdges) {
   }
   document.body.dataset.phase = phaseNow;
   
-  if (dawnA.value) {
-    setPath($(".dawn.astronomical"), dawnA, dawnN);
-  } else {
-    // Skip if there's no astronomical twilight
-    dawnA = dawnN;
-  }
+  setPath($(".dawn.astronomical"), (dawnA.value) ? dawnA : duskN, dawnN);
   setPath($(".dawn.nautical"), dawnN, dawnC);
   setPath($(".dawn.civil"), dawnC, sunrise);
   setPath($(".day"), sunrise, sunset);
   setPath($(".dusk.civil"), sunset, duskC);
   setPath($(".dusk.nautical"), duskC, duskN);
-  if (duskA.value) {
-    setPath($(".dusk.astronomical"), duskN, duskA);
-  } else {
-    // Skip if there's no astronomical twilight
-    duskA = duskN;
-  }
+  setPath($(".dusk.astronomical"), duskN, (duskA.value) ? duskA : dawnN);
   setPath($(".night"), duskA, dawnA);
   
   // Seasons
