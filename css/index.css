@@ -76,6 +76,10 @@ body.setting-hide-now svg .now {
   display: none;
 }
 
+svg .now {
+  fill: #999;
+}
+
 body[data-phase="day"] svg .now {
   fill: #777;
 }
@@ -114,6 +118,10 @@ body[data-season="autumn"] svg .season {
 
 body[data-season="winter"] svg .season {
   fill: hsla(180, 100%, 77%, 0.5);
+}
+
+svg .background {
+  fill: transparent;
 }
 
 svg .day {
