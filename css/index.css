@@ -77,23 +77,23 @@ body.setting-hide-now svg .now {
 }
 
 body[data-phase="day"] svg .now {
-  fill: #AAA;
+  fill: #777;
 }
 
 body[data-phase="night"] svg .now {
-  fill: #444;
+  fill: #777;
 }
 
 body[data-phase="twilight-astronomical"] svg .now {
-  fill: #777;
+  fill: #AAA;
 }
 
 body[data-phase="twilight-civil"] svg .now {
-  fill: #777;
+  fill: #444;
 }
 
 body[data-phase="twilight-nautical"] svg .now {
-  fill: #444;
+  fill: #111;
 }
 
 body.setting-hide-season svg .season {
