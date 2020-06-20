@@ -29,7 +29,7 @@ function toCoord(value, radius = 1) {
 }
 
 function setPath(path, from, to, radius = 1) {
-  if (!from.value || !to.value) {
+  if (!from.value && !to.value) {
     path.removeAttribute("d");
     return;
   }
