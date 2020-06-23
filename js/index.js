@@ -1,32 +1,7 @@
-"use strict";
-
 import * as seasons from "../lib/astrolib/seasons.js";
 import * as sun from "../lib/astrolib/sun.js";
 import * as location from "./location.js";
-import {$} from "./utils.js";
-
-const DEBUG = false;
-
-function log(...args)
-{
-  if (!DEBUG)
-    return;
-  
-  console.log(...args);
-}
-
-function toRad(value) {
-  return Math.PI * 2 * value;
-}
-
-function toCoord(value, radius = 1) {
-  let rad = toRad(value);
-  return {
-    value,
-    x: radius * Math.cos(rad),
-    y: radius * Math.sin(rad )
-  };
-}
+import {$, log, inDay, inYear, toCoord, toRad} from "./utils.js";
 
 function setPath(path, from, to, radius = 1) {
   if (!from.value && !to.value) {
@@ -44,7 +19,7 @@ function setPath(path, from, to, radius = 1) {
   path.setAttribute("d", `M${from.x} ${from.y} A ${radius} ${radius} 0 ${isLarge} 1 ${to.x} ${to.y} L 0 0`);
 }
 
-function addHourIndicator(hour) {
+function renderHourIndicator(hour) {
   let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
   let coord1 = toCoord(hour / 24, 0.9);
   line.setAttribute("x1", coord1.x);
@@ -53,10 +28,6 @@ function addHourIndicator(hour) {
   line.setAttribute("x2", coord2.x);
   line.setAttribute("y2", coord2.y);
   $("svg .labels").appendChild(line);
-}
-
-for (let i = 0; i < 24; i++) {
-  addHourIndicator(i);
 }
 
 function getPrevious(current, items) {
@@ -74,37 +45,19 @@ function getPrevious(current, items) {
   return prev;
 }
 
-// Percentage can't be calculated based on start and end of day
-// or otherwise it will be wrong on leap days
-function perDay(date) {
-  let hours = date.getHours();
-  let minutes = date.getMinutes();
-  return (hours * 60 + minutes) / (24 * 60);
-}
-
-function perYear(date) {
-  let dateNow = new Date();
-  let year = dateNow.getFullYear();
-  let dateStart = new Date(year, 0, 1);
-  let dateEnd = new Date(year + 1, 0, 1) - 1;
-  let totalTime = dateEnd - dateStart;
-  
-  return (date - dateStart) / totalTime;
-}
-
 function render(phases, seasons, seasonEdges) {
   let dateNow = new Date();
   let hours = dateNow.getHours();
   let minutes = dateNow.getMinutes();
   log("time", hours, minutes);
   
-  let now = toCoord(perDay(dateNow), 0.85);
+  let now = toCoord(inDay(dateNow), 0.85);
   log("now", now.value);
   
   // Phases
   // Determine current phase independent of their order
   phases = phases
-    .map((date) => perDay(date))
+    .map((date) => inDay(date))
     .map((rel) => toCoord(rel))
   let [
     dawnA, dawnN, dawnC,
@@ -150,10 +103,10 @@ function render(phases, seasons, seasonEdges) {
   
   // Seasons
   let [spring, summer, autumn, winter] = seasons
-    .map((date) => perYear(date))
+    .map((date) => inYear(date))
     .map((rel) => toCoord(rel, 0.1));
   let [seasonStart, seasonEnd] = seasonEdges
-    .map((date) => perDay(date))
+    .map((date) => inDay(date))
     .map((rel) => toCoord(rel, 0.1));
   log("spring", spring);
   log("summer", summer);
@@ -163,7 +116,7 @@ function render(phases, seasons, seasonEdges) {
   setPath($(".season"), seasonStart, seasonEnd, 0.1);
   
   let seasonNow;
-  let today = toCoord(perYear(dateNow));
+  let today = toCoord(inYear(dateNow));
   let season = getPrevious(today, [spring, summer, autumn, winter]);
   switch (season) {
     case spring:
@@ -222,6 +175,7 @@ function renderWithCoords(lat, lon) {
 
 function renderWithoutCoords() {
   // TODO: NYI
+  renderWithCoords();
 }
 
 function onUpdate() {
@@ -244,8 +198,12 @@ function onUpdate() {
           // TODO: noop, select other location
           break;
       }
-      renderWithCoords();
+      renderWithoutCoords();
     });
+}
+
+for (let i = 0; i < 24; i++) {
+  renderHourIndicator(i);
 }
 
 setInterval(onUpdate, 60 * 1000);
